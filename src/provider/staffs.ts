@@ -1,0 +1,66 @@
+import Model from "../models/staffs"
+import { hash, test } from "../utils/bcrypt"
+import jwt from "../utils/jwt"
+
+interface IStaffCreate {
+  firstName: string
+  lastName: string
+  middleName: string
+  gender: string
+  email: string
+  contact: string
+  password: string
+}
+
+export default class {
+  public async create(data: IStaffCreate) {
+    const {password} = data
+    try {
+      const staff = await Model.create({
+        ...data,
+        password: await hash(password),
+      })
+      return staff
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async signIn(email: string, password: string) {
+    try {
+      const e = "incorrect username or password"
+      const user = await Model.findOne({
+        where: {email}
+      })
+      if (!user) {
+        throw new Error(e)
+      }
+      const testPassword = await test(password, user.password)
+      if (!testPassword) {
+        throw new Error(e)
+      }
+      const r = {
+        id: user.id,
+        email: user.email,
+      }
+      return {
+        ...r,
+        accessToken: new jwt().getAccessToken(r)
+      }
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async authorize(accessToken: string) {
+    try {
+      const r = new jwt().verify(accessToken, `${process.env.JWT_SECRET_KEY_SESSION}`)
+      if (!r) {
+        throw new Error("invalid access token")
+      }
+      return r
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+}
