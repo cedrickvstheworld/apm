@@ -1,6 +1,7 @@
 import Model from "../models/tenants"
 import { hash, test } from "../utils/bcrypt"
 import jwt from "../utils/jwt"
+import { mailSend } from "../utils/sendgrid"
 
 interface ITenantCreate {
   firstName: string
@@ -120,6 +121,51 @@ export default class {
       }
       const updated = await tenant.update({isSuspended})
       return updated
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async forgotPasswordSendMail(email: string) {
+    try {
+      const user = await this.findByEmail(email)
+      if (!user) {
+        throw new Error('Account with this email does not exist in our records')
+      }
+      const token = new jwt().getAccessToken({email, id: user.id, action: 'FORGOT_PASSWORD'})
+      // send email here
+      mailSend({
+        subject: "Password Reset",
+        personalizations: [{ to: email}],
+        from:  `${process.env.SENDGRID_VERIFIED_EMAIL_SENDER}`,
+        replyTo:  `${process.env.SENDGRID_VERIFIED_EMAIL_SENDER}`,
+        content: [
+          {
+            type: "text/plain",
+            value: `follow this link to reset your password - ${process.env.TENANT_CLIENT_HOST}/reset-password?token=${token}`,
+          },
+        ],
+      })
+      return {email}
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async resetPassword(token: string, newPassword: string) {
+    try {
+      const r : any = new jwt().verify(token, `${process.env.JWT_SECRET_KEY_SESSION}`)
+      if (!r) {
+        throw new Error("invalid access token")
+      }
+      const tenant = await Model.findOne({
+        where: {id: r.user.id}
+      })
+      if (!tenant) {
+        throw new Error('record not found')
+      }
+      const updated = await tenant.update({password:  await hash(newPassword)})
+      return {email: updated.email, id: updated.id}
     } catch (e) {
       throw new Error((<Error>e).message)
     }

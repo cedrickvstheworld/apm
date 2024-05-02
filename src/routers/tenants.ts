@@ -108,6 +108,31 @@ const authorize = async (request: Request, response: Response) => {
   }
 }
 
+const forgotPassword = async (request: Request, response: Response) => {
+  const {email} = request.body
+  const provider = new Provider()
+  try {
+    const result = await provider.forgotPasswordSendMail(`${email}`)
+    return response.status(200).json(result)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
+const resetPassword = async (request: Request, response: Response) => {
+  const {token, newPassword} = request.body
+  const provider = new Provider()
+  try {
+    const result = await provider.resetPassword(token, newPassword)
+    return response.status(200).json(result)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
 
 class Urls {
   private router: Router
@@ -129,6 +154,16 @@ class Urls {
     this.router.get(
       '/auth',
       authorize,
+    )
+
+    this.router.post(
+      '/forgot-password',
+      forgotPassword,
+    )
+    
+    this.router.patch(
+      '/reset-password',
+      resetPassword,
     )
 
     this.router.post(
