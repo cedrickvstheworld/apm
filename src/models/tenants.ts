@@ -37,7 +37,7 @@ Tenant.init({
   addressBefore: DataTypes.STRING,
   isVerified: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    defaultValue: true,
   },
   isSuspended: {
     type: DataTypes.BOOLEAN,

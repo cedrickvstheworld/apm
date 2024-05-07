@@ -32,6 +32,48 @@ export default class {
     }
   }
 
+  public async update(tenantId: string, data: Omit<ITenantCreate, 'password'>) {
+    try {
+      const emailVerify = await Model.findOne({where: {email: data.email}})
+      if (emailVerify && emailVerify.id !== tenantId) {
+        throw new Error('email is already in used by another user')
+      }
+      const tenant = await Model.findOne({where: {id: tenantId}})
+      if (!tenant) {
+        throw new Error('room does not exist')
+      }
+      const updated = await tenant.update(data)
+      return updated
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async deleteTenant(tenantId: string) {
+    const query = {where: {id: tenantId}}
+    try {
+      const tenant = await Model.findOne(query)
+      if (!tenant) {
+        throw new Error('tenant does not exist')
+      }
+      await Model.destroy(query)
+      return tenant
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async findById(id: string) {
+    try {
+      const tenant = await Model.findOne({
+        where: {id}
+      })
+      return tenant
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
   public async findByEmail(email: string) {
     try {
       const tenant = await Model.findOne({

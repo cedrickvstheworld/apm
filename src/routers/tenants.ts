@@ -33,6 +33,62 @@ export const create = async (request: Request, response: Response) => {
   }
 }
 
+export const update = async (request: Request, response: Response) => {
+  const {tenantId} = request.params
+  const {
+    firstName,
+    lastName,
+    middleName,
+    gender,
+    email,
+    contact,
+    addressBefore,
+  } = request.body
+  const provider = new Provider()
+  try {
+    const tenant = await provider.update(tenantId, {
+      firstName,
+      lastName,
+      middleName,
+      gender,
+      email,
+      contact,
+      addressBefore,
+    })
+    return response.status(200).json({tenant})
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
+export const getById = async (request: Request, response: Response) => {
+  const {tenantId} = request.params
+  const provider = new Provider()
+  try {
+    const tenant = await provider.findById(tenantId)
+    return response.status(200).json(tenant)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
+export const deleteTenant = async (request: Request, response: Response) => {
+  const {tenantId} = request.params
+  const provider = new Provider()
+  try {
+    const deleted = await provider.deleteTenant(tenantId)
+    return response.status(200).json(deleted)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
 export const list = async (request: Request, response: Response) => {
   const {isVerified = "true"} = request.query
   const provider = new Provider()
@@ -149,6 +205,21 @@ class Urls {
     this.router.post(
       '/',
       create,
+    )
+
+    this.router.get(
+      '/:tenantId',
+      getById,
+    )
+
+    this.router.patch(
+      '/:tenantId',
+      update,
+    )
+
+    this.router.delete(
+      '/:tenantId',
+      deleteTenant,
     )
     
     this.router.get(
