@@ -11,6 +11,17 @@ export default class {
     }
   }
 
+  public async findById(id: string) {
+    try {
+      const room = await Model.findOne({
+        where: {id}
+      })
+      return room
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
   public async update(roomId: string, data: IRoomCreate) {
     try {
       const room = await Model.findOne({where: {id: roomId}})

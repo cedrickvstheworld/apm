@@ -81,6 +81,19 @@ export const list = async (request: Request, response: Response) => {
   }
 }
 
+export const getById = async (request: Request, response: Response) => {
+  const {roomId} = request.params
+  const provider = new Provider()
+  try {
+    const room = await provider.findById(roomId)
+    return response.status(200).json(room)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
 export const assign = async (request: Request, response: Response) => {
   const {roomId, tenantId} = request.body
   const provider = new Provider()
@@ -140,6 +153,11 @@ class Urls {
     this.router.get(
       '/',
       list,
+    )
+
+    this.router.get(
+      '/:roomId',
+      getById,
     )
 
     this.router.post(
