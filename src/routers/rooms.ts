@@ -127,6 +127,16 @@ class Urls {
   }
   
   public expose() {
+    this.router.patch(
+      '/assign',
+      assign,
+    )
+
+    this.router.patch(
+      '/unassign',
+      unAssign,
+    )
+
     this.router.get(
       '/',
       list,
@@ -145,16 +155,6 @@ class Urls {
     this.router.delete(
       '/:roomId',
       deleteRoom,
-    )
-
-    this.router.patch(
-      '/assign',
-      assign,
-    )
-
-    this.router.patch(
-      '/unassign',
-      unAssign,
     )
 
     return this.router

@@ -184,7 +184,7 @@ export default class {
         content: [
           {
             type: "text/plain",
-            value: `follow this link to reset your password - ${process.env.TENANT_CLIENT_HOST}/reset-password?token=${token}`,
+            value: `follow this link to reset your password - ${process.env.TENANT_CLIENT_HOST}/resetPassword.php?token=${token}`,
           },
         ],
       })

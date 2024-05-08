@@ -198,31 +198,6 @@ class Urls {
   
   public expose() {
     this.router.get(
-      '/',
-      list,
-    )
-
-    this.router.post(
-      '/',
-      create,
-    )
-
-    this.router.get(
-      '/:tenantId',
-      getById,
-    )
-
-    this.router.patch(
-      '/:tenantId',
-      update,
-    )
-
-    this.router.delete(
-      '/:tenantId',
-      deleteTenant,
-    )
-    
-    this.router.get(
       '/auth',
       authorize,
     )
@@ -250,6 +225,31 @@ class Urls {
     this.router.patch(
       '/suspend/:id',
       suspend,
+    )
+
+    this.router.get(
+      '/',
+      list,
+    )
+
+    this.router.post(
+      '/',
+      create,
+    )
+
+    this.router.get(
+      '/:tenantId',
+      getById,
+    )
+
+    this.router.patch(
+      '/:tenantId',
+      update,
+    )
+
+    this.router.delete(
+      '/:tenantId',
+      deleteTenant,
     )
   
     return this.router
