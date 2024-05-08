@@ -108,7 +108,7 @@ export const unAssign = async (request: Request, response: Response) => {
 }
 
 export const deleteRoom = async (request: Request, response: Response) => {
-  const {roomId} = request.body
+  const {roomId} = request.params
   const provider = new Provider()
   try {
     const deleted = await provider.deleteRoom(roomId)
