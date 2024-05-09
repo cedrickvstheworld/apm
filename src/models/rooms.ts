@@ -4,6 +4,8 @@ import { IBaseAttribs, baseAttribs, } from "./common"
 
 export interface IRoomCreate {
   roomCode: string
+  roomNo: string
+  roomType: string
   buildingCode: string
   isOccupied: boolean
   hasKitchen: boolean
@@ -29,6 +31,8 @@ class Room extends Model<IRoomAttribs, IRoomInput> implements IRoomAttribs {
   public id!: string
   public assignedTo!: string | null
   public roomCode!: string
+  public roomNo!: string
+  public roomType!: string
   public buildingCode!: string
   public isOccupied!: boolean
   public hasKitchen!: boolean
@@ -44,6 +48,8 @@ class Room extends Model<IRoomAttribs, IRoomInput> implements IRoomAttribs {
 Room.init({
   ...baseAttribs,
   roomCode: DataTypes.STRING,
+  roomNo: DataTypes.STRING,
+  roomType: DataTypes.STRING,
   buildingCode: DataTypes.STRING,
   assignedTo: {
     type: DataTypes.STRING,

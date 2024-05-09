@@ -5,6 +5,8 @@ import Provider from "../provider/rooms"
 export const create = async (request: Request, response: Response) => {
   const {
     roomCode,
+    roomNo,
+    roomType,
     buildingCode,
     isOccupied,
     hasKitchen,
@@ -18,6 +20,8 @@ export const create = async (request: Request, response: Response) => {
   try {
     const room = await provider.create({
       roomCode,
+      roomNo,
+      roomType,
       buildingCode,
       isOccupied,
       hasKitchen,
@@ -39,6 +43,8 @@ export const update = async (request: Request, response: Response) => {
   const {roomId} = request.params
   const {
     roomCode,
+    roomNo,
+    roomType,
     buildingCode,
     isOccupied,
     hasKitchen,
@@ -52,6 +58,8 @@ export const update = async (request: Request, response: Response) => {
   try {
     const room = await provider.update(roomId, {
       roomCode,
+      roomNo,
+      roomType,
       buildingCode,
       isOccupied,
       hasKitchen,
