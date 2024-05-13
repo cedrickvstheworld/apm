@@ -11,6 +11,7 @@ import { modelsInit } from "./models/init"
 import TenantsRouter from './routers/tenants'
 import StaffsRouter from './routers/staffs'
 import RoomsRouter from './routers/rooms'
+import MessagesRouter from './routers/messages'
 
 class Main {
   private app: Application
@@ -41,6 +42,7 @@ class Main {
     this.app.use('/tenants', TenantsRouter)
     this.app.use('/staffs', StaffsRouter)
     this.app.use('/rooms', RoomsRouter)
+    this.app.use('/messages', MessagesRouter)
     this.app.use((request: Request, response: Response, next: NextFunction) => {
       const {access_token} = request.headers
       try {
