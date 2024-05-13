@@ -15,6 +15,7 @@ export interface IRoomCreate {
   ratePerMonth: number
   hasBathroomComfortRoom: boolean
   assignedTo?: string | null
+  lastDateAssigned?: string | null
 }
 
 interface IRoomAttribs extends IBaseAttribs, IRoomCreate {}
@@ -24,12 +25,14 @@ export interface IRoomInput extends Optional<IRoomAttribs,
  'assignedTo' |
  'createdAt' | 
  'updatedAt' | 
+ 'lastDateAssigned' |
  'isOccupied'> {}
 export interface IRoomOutput extends Required<IRoomAttribs> {}
 
 class Room extends Model<IRoomAttribs, IRoomInput> implements IRoomAttribs {
   public id!: string
   public assignedTo!: string | null
+  public lastDateAssigned!: string | null
   public roomCode!: string
   public roomNo!: string
   public roomType!: string
@@ -53,6 +56,11 @@ Room.init({
   buildingCode: DataTypes.STRING,
   assignedTo: {
     type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+  },
+  lastDateAssigned: {
+    type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null,
   },

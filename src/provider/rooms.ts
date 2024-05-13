@@ -1,3 +1,4 @@
+import sequelize from "sequelize"
 import  Model, {IRoomCreate} from "../models/rooms"
 import Tenant from  "./tenants"
 
@@ -55,7 +56,11 @@ export default class {
       if (!room) {
         throw new Error('room does not exist')
       }
-      const updated = await room.update({isOccupied: true, assignedTo: tenantId})
+      const updated = await room.update({
+        isOccupied: true,
+        assignedTo: tenantId,
+        lastDateAssigned: sequelize.literal('CURRENT_TIMESTAMP'),
+      })
       return updated
     } catch (e) {
       throw new Error((<Error>e).message)
