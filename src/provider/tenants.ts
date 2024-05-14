@@ -40,7 +40,7 @@ export default class {
       }
       const tenant = await Model.findOne({where: {id: tenantId}})
       if (!tenant) {
-        throw new Error('room does not exist')
+        throw new Error('tenant does not exist')
       }
       const updated = await tenant.update(data)
       return updated

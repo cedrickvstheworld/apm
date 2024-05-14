@@ -42,6 +42,34 @@ export const create = async (request: Request, response: Response) => {
   }
 }
 
+export const update = async (request: Request, response: Response) => {
+  const {staffId} = request.params
+  const {
+    firstName,
+    lastName,
+    middleName,
+    gender,
+    email,
+    contact,
+  } = request.body
+  const provider = new Provider()
+  try {
+    const staff = await provider.update(staffId, {
+      firstName,
+      lastName,
+      middleName,
+      gender,
+      email,
+      contact,
+    })
+    return response.status(200).json({staff})
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
 const signIn = async (request: Request, response: Response) => {
   const {
     email,
@@ -98,6 +126,11 @@ class Urls {
     this.router.post(
       '/sign-in',
       signIn,
+    )
+
+    this.router.patch(
+      '/:staffId',
+      update,
     )
   
     return this.router

@@ -16,11 +16,32 @@ export default class {
   public async create(data: IStaffCreate) {
     const {password} = data
     try {
+      const existing = await Model.findOne({where: {email: data.email}})
+      if (existing ) {
+        throw new Error('Staff with this email is already registered')
+      }
       const staff = await Model.create({
         ...data,
         password: await hash(password),
       })
       return staff
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async update(staffId: string, data: Omit<IStaffCreate, 'password'>) {
+    try {
+      const emailVerify = await Model.findOne({where: {email: data.email}})
+      if (emailVerify && emailVerify.id !== staffId) {
+        throw new Error('email is already in used by another user')
+      }
+      const staff = await Model.findOne({where: {id: staffId}})
+      if (!staff) {
+        throw new Error('staff does not exist')
+      }
+      const updated = await staff.update(data)
+      return updated
     } catch (e) {
       throw new Error((<Error>e).message)
     }
