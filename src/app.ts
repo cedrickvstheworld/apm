@@ -2,6 +2,7 @@ require("dotenv").config({ path: `${__dirname}/../.env` })
 
 import express, { Response, Request, Application,  NextFunction} from "express"
 import morgan from 'morgan'
+import cron from "node-cron";
 
 import fileUpload from "express-fileupload"
 import path from "path"
@@ -12,6 +13,9 @@ import TenantsRouter from './routers/tenants'
 import StaffsRouter from './routers/staffs'
 import RoomsRouter from './routers/rooms'
 import MessagesRouter from './routers/messages'
+import BalanceRouter from './routers/balance'
+
+import Balance from "./provider/balance"
 
 class Main {
   private app: Application
@@ -43,6 +47,7 @@ class Main {
     this.app.use('/staffs', StaffsRouter)
     this.app.use('/rooms', RoomsRouter)
     this.app.use('/messages', MessagesRouter)
+    this.app.use('/balance', BalanceRouter)
     this.app.use((request: Request, response: Response, next: NextFunction) => {
       const {access_token} = request.headers
       try {
@@ -88,6 +93,10 @@ class Main {
 
     this.connectToDatabase()
     this.loadRouters()
+    cron.schedule("* * * * *", () => {
+      const BalanceProvider = new Balance()
+      BalanceProvider.create()
+    })
   }
 }
 

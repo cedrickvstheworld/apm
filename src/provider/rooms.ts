@@ -1,4 +1,3 @@
-import sequelize from "sequelize"
 import  Model, {IRoomCreate} from "../models/rooms"
 import Tenant from  "./tenants"
 
@@ -59,7 +58,7 @@ export default class {
       const updated = await room.update({
         isOccupied: true,
         assignedTo: tenantId,
-        lastDateAssigned: sequelize.literal('CURRENT_TIMESTAMP'),
+        lastDateAssigned: (new Date()).toISOString(),
       })
       return updated
     } catch (e) {
