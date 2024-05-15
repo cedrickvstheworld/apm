@@ -10,11 +10,6 @@ export const create = async (request: Request, response: Response) => {
     dueDate,
     billType,
   } = request.body
-  if (typeof amountDue !== 'number') {
-    return response.status(400).json({
-      message: "amountDue must be a number"
-    })
-  }
   if (!Object.keys(BILL_TYPE).includes(billType)) {
     return response.status(400).json({
       message: 'billType must be (RENT, ELECTRICITY or WATER)'
@@ -24,7 +19,7 @@ export const create = async (request: Request, response: Response) => {
   try {
     const bill = await provider.createExplicit({
       roomId,
-      amountDue,
+      amountDue: parseInt(amountDue),
       dueDate,
       billType,
     })
