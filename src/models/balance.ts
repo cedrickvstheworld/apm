@@ -9,6 +9,7 @@ export interface IBalanceCreate {
   amountDue: number
   isPaid: boolean
   dueDate: string
+  billType: string
 }
 
 interface IBalanceAttribs extends IBaseAttribs, IBalanceCreate {}
@@ -28,6 +29,7 @@ class Balance extends Model<IBalanceAttribs, IBalanceInput> implements IBalanceA
   public amountDue!: number
   public isPaid!: boolean
   public dueDate!: string
+  public billType!: string
   public createdAt!: string
   public updatedAt!: string
 }
@@ -37,6 +39,7 @@ Balance.init({
   tenantId: DataTypes.STRING,
   tenantName: DataTypes.STRING,
   roomId: DataTypes.STRING,
+  billType: DataTypes.STRING,
   amountDue: DataTypes.INTEGER,
   isPaid: {
     type: DataTypes.BOOLEAN,

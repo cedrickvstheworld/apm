@@ -2,6 +2,7 @@ import sequelize from "sequelize"
 import  Model, {IBalanceCreate} from "../models/balance"
 import Rooms from "./rooms"
 import Tenants from "./tenants"
+import { BILL_TYPE } from "../utils/constants"
 
 export default class {
   public async create() {
@@ -20,6 +21,7 @@ export default class {
           const existingBill = await Model.findOne({
             where: {
               roomId: room.id,
+              billType: BILL_TYPE.RENT,
               dueDate,
             }
           });
@@ -35,11 +37,40 @@ export default class {
             roomId: room.id,
             amountDue: room.ratePerMonth,
             dueDate,
+            billType: BILL_TYPE.RENT,
           })
           return billNextMonth;
         }
       }
       return 
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
+
+  public async createExplicit({roomId, amountDue, dueDate, billType}: {
+    roomId: string,
+    amountDue: number,
+    dueDate: string,
+    billType: string,
+  }) {
+    try {
+      const RoomProvider = new Rooms()
+      const room = await RoomProvider.findById(roomId)
+      if (!room) {
+        throw new Error('room not found')
+      }
+      const TenantProvider = new Tenants()
+      const tenant = await TenantProvider.findById(`${room.assignedTo}`)
+      const bill = await Model.create({
+        roomId,
+        tenantName: room.assignedTo ? `${tenant?.lastName}, ${tenant?.firstName} ${tenant?.middleName}` : "VACANT",
+        amountDue,
+        tenantId: room.assignedTo ? room.assignedTo : "VACANT",
+        dueDate: (new Date(dueDate)).toISOString(),
+        billType,
+      })
+      return bill
     } catch (e) {
       throw new Error((<Error>e).message)
     }

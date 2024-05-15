@@ -1,6 +1,36 @@
 import express, { Router } from 'express'
 import {Request, Response} from 'express'
 import Provider from "../provider/balance"
+import { BILL_TYPE } from '../utils/constants'
+
+export const create = async (request: Request, response: Response) => {
+  const {
+    roomId,
+    amountDue,
+    dueDate,
+    billType,
+  } = request.body
+  if (typeof amountDue !== 'number') {
+    throw new Error('amountDue must be a number')
+  }
+  if (!Object.keys(BILL_TYPE).includes(billType)) {
+    throw new Error('billType must be (RENT, ELECTRICITY or WATER)')
+  }
+  const provider = new Provider()
+  try {
+    const bill = await provider.createExplicit({
+      roomId,
+      amountDue,
+      dueDate,
+      billType,
+    })
+    return response.status(200).json(bill)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
 
 export const list = async (request: Request, response: Response) => {
   let {isPaid, tenantId} = request.query
@@ -74,6 +104,12 @@ class Urls {
     this.router.patch(
       '/pay/:balanceId',
       pay,
+    )
+
+
+    this.router.post(
+      '/',
+      create,
     )
 
     this.router.get(

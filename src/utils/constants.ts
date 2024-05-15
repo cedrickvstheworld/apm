@@ -1,5 +1,5 @@
-export const PRODUCT_TYPE = {
-  BEVERAGE: 'BEVERAGE',
-  MEAL: 'FOOD',
-  DESSERT: 'DESSERT',
+export const BILL_TYPE = {
+  RENT: 'RENT',
+  ELECTRICITY: 'ELECTRICITY',
+  WATER: 'WATER',
 }
