@@ -16,7 +16,9 @@ export const create = async (request: Request, response: Response) => {
     })
   }
   if (!Object.keys(BILL_TYPE).includes(billType)) {
-    throw new Error('billType must be (RENT, ELECTRICITY or WATER)')
+    return response.status(400).json({
+      message: 'billType must be (RENT, ELECTRICITY or WATER)'
+    })
   }
   const provider = new Provider()
   try {
