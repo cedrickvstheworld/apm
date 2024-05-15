@@ -190,6 +190,23 @@ const resetPassword = async (request: Request, response: Response) => {
   }
 }
 
+const updatePassword = async (request: Request, response: Response) => {
+  const {
+    userId,
+    currentPassword,
+    newPassword,
+  } = request.body
+  const provider = new Provider()
+  try {
+    const user = await provider.updatePassword(userId, currentPassword, newPassword)
+    return response.status(200).json(user)
+  } catch(e) {
+    return response.status(400).json({
+      message: (<Error>e).message
+    })
+  }
+}
+
 class Urls {
   private router: Router
   constructor() {
@@ -210,6 +227,11 @@ class Urls {
     this.router.patch(
       '/reset-password',
       resetPassword,
+    )
+    
+    this.router.patch(
+      '/updatePassword/:staffId',
+      updatePassword,
     )
 
     this.router.post(

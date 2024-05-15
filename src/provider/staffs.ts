@@ -84,4 +84,23 @@ export default class {
       throw new Error((<Error>e).message)
     }
   }
+  
+  public async updatePassword(id: string, currentPassword: string, newPassword: string) {
+    try {
+      const user = await Model.findOne({
+        where: {id}
+      })
+      if (!user) {
+        throw new Error('record not found')
+      }
+      const testPassword = await test(currentPassword, user.password)
+      if (!testPassword) {
+        throw new Error('incorrect current password')
+      }
+      const updated = await user.update({password:  await hash(newPassword)})
+      return {email: updated.email, id: updated.id}
+    } catch (e) {
+      throw new Error((<Error>e).message)
+    }
+  }
 }
