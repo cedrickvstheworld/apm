@@ -11,7 +11,9 @@ export const create = async (request: Request, response: Response) => {
     billType,
   } = request.body
   if (typeof amountDue !== 'number') {
-    throw new Error('amountDue must be a number')
+    return response.status(400).json({
+      message: "amountDue must be a number"
+    })
   }
   if (!Object.keys(BILL_TYPE).includes(billType)) {
     throw new Error('billType must be (RENT, ELECTRICITY or WATER)')
