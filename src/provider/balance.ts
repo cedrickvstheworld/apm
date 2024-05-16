@@ -27,7 +27,7 @@ export default class {
           });
           console.log(existingBill)
           if (existingBill) {
-            return
+            continue;
           }
           const TenantProvider = new Tenants()
           const tenant = await TenantProvider.findById(`${room.assignedTo}`)
@@ -39,7 +39,7 @@ export default class {
             dueDate,
             billType: BILL_TYPE.RENT,
           })
-          return billNextMonth;
+          continue;
         }
       }
       return 
