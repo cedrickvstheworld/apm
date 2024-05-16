@@ -17,7 +17,8 @@ export default class {
           // const fd = (new Date(d.getFullYear(), d.getMonth() + 1, 1)).toISOString()
           // const ld = (new Date(d.getFullYear(), d.getMonth() + 2, 0)).toISOString()
           const dateAssign = new Date(`${room.lastDateAssigned}`)
-          const dueDate = new Date(dateAssign.getFullYear(), dateAssign.getMonth() + 1, dateAssign.getDate()).toISOString()
+          const d = new Date()
+          const dueDate = new Date(d.getFullYear(), d.getMonth() + 1, dateAssign.getDate()).toISOString()
           const existingBill = await Model.findOne({
             where: {
               roomId: room.id,
